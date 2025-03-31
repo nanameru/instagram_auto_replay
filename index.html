@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インスタグラムDM履歴管理アプリ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 全体のスタイル */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        /* ヘッダー */
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* サイドバー */
+        #sidebar {
+            height: 100vh;
+            overflow-y: auto;
+            background-color: #fff;
+            border-right: 1px solid #dee2e6;
+            padding: 1rem;
+        }
+        
+        /* サイドバー内の要素のスタイルを追加 */
+        .user-icon {
+            text-align: center;
+            margin-bottom: 1rem;
+            padding-top: 1rem;
+        }
+        
+        .sidebar-item {
+            padding: 0.75rem 1rem;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border-radius: 0.25rem;
+            margin-bottom: 0.5rem;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        .sidebar-item i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar-item.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .account-switcher {
+            border-top: 1px solid #dee2e6;
+            padding-top: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .account-option {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .account-option:hover {
+            background-color: #e9ecef;
+        }
+        
+        .account-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            background-color: #f1f1f1;
+        }
+        
+        .account-circle i {
+            font-size: 0.9rem;
+        }
+        
+        /* 顧客リスト */
+        .customer-list {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        
+        .customer-item {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .customer-item:hover, .customer-item.active {
+            background-color: #f1f1f1;
+        }
+        
+        .customer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+        
+        .customer-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .customer-info {
+            flex: 1;
+        }
+        
+        .customer-name {
+            font-weight: bold;
+        }
+        
+        .customer-username {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        /* メッセージ */
+        .message-container {
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            word-break: break-word;
+            position: relative;
+        }
+        
+        .message-customer {
+            background-color: #e9ecef;
+            align-self: flex-start;
+        }
+        
+        .message-user {
+            background-color: #007bff;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        
+        .message.sending {
+            opacity: 0.7;
+        }
+        
+        .timestamp {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        /* 編集ボタン */
+        .edit-message-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: transparent;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .message:hover .edit-message-btn {
+            opacity: 1;
+        }
+        
+        .message-user .edit-message-btn {
+            color: white;
+        }
+        
+        /* 編集モード */
+        .message.editing {
+            padding-bottom: 40px;
+        }
+        
+        .edit-message-input {
+            width: 100%;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 5px;
+            margin-top: 5px;
+        }
+        
+        .edit-actions {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            display: flex;
+        }
+        
+        .edit-actions button {
+            margin-left: 5px;
+            border: none;
+            border-radius: 3px;
+            padding: 2px 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .save-edit-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .cancel-edit-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        /* 返信候補 */
+        .reply-suggestions {
+            margin-bottom: 20px;
+        }
+        
+        .reply-buttons {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .reply-btn {
+            margin-right: 5px;
+            margin-bottom: 5px;
+            white-space: normal;
+            text-align: left;
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 991.98px) {
+            #sidebar {
+                position: fixed;
+                top: 0;
+                height: 100vh;
+                left: -100%;
+                width: 80%;
+                max-width: 300px;
+                z-index: 1000;
+                transition: left 0.3s ease-in-out;
+                background-color: white;
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+                border-right: none;
+                padding-top: 3.5rem;
+            }
+            
+            #sidebar.show {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+                width: 100%;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            #sidebar.show ~ .sidebar-overlay {
+                display: block;
+            }
+            
+            .customer-list-container,
+            .col-md-7 {
+                width: 100%;
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+            .customer-list-container {
+                margin-bottom: 1rem;
+            }
+        }
+        
+        /* ↓ Added styles for mobile toggle button */
+        .mobile-menu-toggle {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1031;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px 10px;
+            display: none;
+            cursor: pointer;
+        }
+        
+        /* ↓ Added styles for sidebar overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- モバイルメニュートグル -->
+    <button class="mobile-menu-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- サイドバーオーバーレイ -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <!-- サイドバー -->
+            <div class="col-lg-3 sidebar" id="sidebar">
+                <div class="user-icon">
+                    <i class="fas fa-user fa-2x text-primary"></i>
+                </div>
+                <div class="text-center mb-4">現在のユーザー</div>
+                
+                <div class="sidebar-item active">
+                    <i class="fas fa-chart-line"></i>
+                    ダッシュボード
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-users"></i>
+                    顧客一覧
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-user-friends"></i>
+                    チームメンバー
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-cog"></i>
+                    アカウント設定
+                </div>
+                
+                <div class="account-switcher mt-5">
+                    <div class="mb-2 ms-3">
+                        <i class="fas fa-exchange-alt me-2"></i>
+                        アカウント切り替え
+                    </div>
+                    <div class="account-option">
+                        <div class="account-circle">
+                            <i class="fas fa-user-circle text-primary"></i>
+                        </div>
+                        アカウント1
+                    </div>
+                    <div class="account-option">
+                        <div class="account-circle">
+                            <i class="fas fa-user-circle text-primary"></i>
+                        </div>
+                        アカウント2
+                    </div>
+                    <div class="account-option">
+                        <div class="account-circle">
+                            <i class="fas fa-plus text-primary"></i>
+                        </div>
+                        新規追加
+                    </div>
+                </div>
+            </div>
+            
+            <!-- メインコンテンツ -->
+            <div class="col-lg-9 p-4 main-content">
+                <div class="row">
+                    <!-- 顧客リスト -->
+                    <div class="col-md-5 customer-list-container">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">顧客アカウント一覧</h5>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder="顧客検索..." aria-label="顧客検索">
+                                    <button class="btn btn-outline-secondary" type="button">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="customer-list">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- DMやり取り履歴 -->
+                    <div class="col-md-7">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">DMやり取り履歴</h5>
+                                <h6 class="text-danger mb-4"></h6>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 id="customer-username-display" class="text-danger mb-0"></h6>
+                                    <div>
+                                        <button id="sync-dm-button" class="btn btn-sm btn-outline-secondary" style="display: none;">
+                                            <i class="fas fa-sync-alt me-1"></i>DM同期
+                                        </button>
+                                        <span id="sync-status" class="ms-2 text-muted small"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="message-container d-flex flex-column">
+                                </div>
+                                
+                                <!-- 返信候補 -->
+                                <div class="reply-suggestions">
+                                </div>
+                                
+                                <div class="mt-3 input-group">
+                                    <input type="text" class="form-control" placeholder="メッセージを入力..." aria-label="メッセージを入力">
+                                    <button class="btn btn-primary" type="button">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ↓ アカウント設定セクションを追加 -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">アカウント設定</h5>
+                                <div class="mb-3">
+                                    <label for="accessKeyInput" class="form-label">Instagram アクセスキー</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="accessKeyInput" placeholder="アクセスキーを入力...">
+                                        <button class="btn btn-primary" type="button" id="save-key-button">保存</button>
+                                    </div>
+                                    <div class="form-text">現在の設定: <span id="access-key-status" class="fw-bold">読み込み中...</span></div>
+                                    <div id="save-key-message" class="mt-2"></div>
+                                </div>
+                                <!-- 他の設定項目があればここに追加 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ↑ アカウント設定セクションここまで -->
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script>
+        // ローカル表示用のダミー google.script.run オブジェクト
+        // google オブジェクトが存在しない場合にのみ定義
+        if (typeof google === 'undefined' || !google.script) {
+            window.google = {
+                script: {
+                    run: {
+                        _successHandler: null,
+                        _failureHandler: null,
+                        withSuccessHandler: function(handler) {
+                            this._successHandler = handler;
+                            return this;
+                        },
+                        withFailureHandler: function(handler) {
+                            this._failureHandler = handler;
+                            return this;
+                        },
+                        // ダミーの顧客データを返す
+                        getCustomers: function() {
+                            const dummyCustomers = {
+                                'customer1': { id: 'customer1', name: '顧客A (ダミー)', username: '@customer_a_dummy', avatar: 'https://via.placeholder.com/50/007bff/ffffff?text=A', messages: [] },
+                                'customer2': { id: 'customer2', name: '顧客B (ダミー)', username: '@customer_b_dummy', avatar: 'https://via.placeholder.com/50/6c757d/ffffff?text=B', messages: [] },
+                                'customer3': { id: 'customer3', name: '顧客C (ダミー)', username: '@customer_c_dummy', avatar: 'https://via.placeholder.com/50/28a745/ffffff?text=C', messages: [] }
+                            };
+                            if (this._successHandler) {
+                                console.log("[ダミー] getCustomers を呼び出しました。");
+                                setTimeout(() => {
+                                    try {
+                                        this._successHandler(dummyCustomers);
+                                    } catch (e) {
+                                        console.error("Success handler for getCustomers failed:", e);
+                                        if (this._failureHandler) this._failureHandler(e);
+                                    }
+                                    this._successHandler = null; // ハンドラをリセット
+                                    this._failureHandler = null;
+                                }, 100); // 非同期っぽく見せるための遅延
+                            } else {
+                                this._successHandler = null;
+                                this._failureHandler = null;
+                            }
+                            return this; // Chainingを可能にする
+                        },
+                        // ダミーの顧客詳細データを返す
+                        getCustomer: function(customerId) {
+                             const dummyCustomerData = {
+                                'customer1': {
+                                    id: 'customer1', name: '顧客A (ダミー)', username: '@customer_a_dummy', avatar: 'https://via.placeholder.com/50/007bff/ffffff?text=A',
+                                    messages: [
+                                        { sender: 'customer', text: 'こんにちは！ (ダミー)', timestamp: '10:00' },
+                                        { sender: 'user', text: 'お問い合わせありがとうございます。(ダミー)', timestamp: '10:01' },
+                                        { sender: 'customer', text: 'これは長いメッセージのテストです。折り返しが発生するかどうかを確認しています。(ダミー)', timestamp: '10:05' },
+                                    ]
+                                },
+                                'customer2': {
+                                    id: 'customer2', name: '顧客B (ダミー)', username: '@customer_b_dummy', avatar: 'https://via.placeholder.com/50/6c757d/ffffff?text=B',
+                                    messages: [
+                                        { sender: 'customer', text: '質問があります。(ダミー)', timestamp: '11:30' },
+                                    ]
+                                },
+                                 'customer3': {
+                                    id: 'customer3', name: '顧客C (ダミー)', username: '@customer_c_dummy', avatar: 'https://via.placeholder.com/50/28a745/ffffff?text=C',
+                                    messages: [] // メッセージなしのテスト
+                                }
+                            };
+                            if (this._successHandler) {
+                                console.log(`[ダミー] getCustomer(${customerId}) を呼び出しました。`);
+                                setTimeout(() => {
+                                    try {
+                                        this._successHandler(dummyCustomerData[customerId] || null);
+                                    } catch(e) {
+                                        console.error(`Success handler for getCustomer(${customerId}) failed:`, e);
+                                        if(this._failureHandler) this._failureHandler(e);
+                                    }
+                                     this._successHandler = null;
+                                     this._failureHandler = null;
+                                }, 100);
+                            } else {
+                                this._successHandler = null;
+                                this._failureHandler = null;
+                            }
+                             return this;
+                        },
+                        // ダミーの返信候補を返す
+                        getReplySuggestions: function(customerId) {
+                            const dummySuggestions = ['承知しました。(ダミー)', '確認します。(ダミー)', 'ありがとうございます！(ダミー)'];
+                            if (this._successHandler) {
+                                 console.log(`[ダミー] getReplySuggestions(${customerId}) を呼び出しました。`);
+                                 setTimeout(() => {
+                                     try {
+                                        this._successHandler(dummySuggestions);
+                                     } catch(e) {
+                                        console.error(`Success handler for getReplySuggestions(${customerId}) failed:`, e);
+                                        if(this._failureHandler) this._failureHandler(e);
+                                     }
+                                     this._successHandler = null;
+                                     this._failureHandler = null;
+                                 }, 100);
+                            } else {
+                                this._successHandler = null;
+                                this._failureHandler = null;
+                            }
+                             return this;
+                        },
+                        // 常に成功を返す (編集)
+                        editMessageInSheet: function(customerId, oldText, newText) {
+                            console.log(`[ダミー] editMessageInSheet 呼び出し: customerId=${customerId}, oldText=${oldText}, newText=${newText}`);
+                            if (this._successHandler) {
+                                 setTimeout(() => {
+                                     try {
+                                        this._successHandler(true); // 成功したことにする
+                                     } catch (e) {
+                                         console.error("Success handler for editMessageInSheet failed:", e);
+                                         if (this._failureHandler) this._failureHandler(e);
+                                     }
+                                     this._successHandler = null;
+                                     this._failureHandler = null;
+                                 }, 100);
+                            } else {
+                                this._successHandler = null;
+                                this._failureHandler = null;
+                            }
+                             return this;
+                        },
+                        // 常に成功を返す (送信)
+                        sendMessageToCustomer: function(customerId, text) {
+                            console.log(`[ダミー] sendMessageToCustomer 呼び出し: customerId=${customerId}, text=${text}`);
+                             if (this._successHandler) {
+                                 setTimeout(() => {
+                                      try {
+                                        this._successHandler(true); // 成功したことにする
+                                     } catch (e) {
+                                         console.error("Success handler for sendMessageToCustomer failed:", e);
+                                         if (this._failureHandler) this._failureHandler(e);
+                                     }
+                                     this._successHandler = null;
+                                     this._failureHandler = null;
+                                 }, 100);
+                            } else {
+                                this._successHandler = null;
+                                this._failureHandler = null;
+                            }
+                             return this;
+                        },
+                        // --- 追加: アカウント設定用ダミー関数 ---
+                        saveAccessKey: function(key) {
+                            console.log(`[ダミー] saveAccessKey 呼び出し: key=${key}`);
+                            // ローカルストレージにダミーキー情報を保存 (オプション)
+                            localStorage.setItem('dummy_access_key_set', 'true');
+                            localStorage.setItem('dummy_access_key_last_four', key.slice(-4));
+
+                            if (this._successHandler) {
+                                setTimeout(() => {
+                                    try {
+                                        this._successHandler(true); // 常に成功を返す
+                                    } catch (e) {
+                                        console.error("Success handler for saveAccessKey failed:", e);
+                                        if (this._failureHandler) this._failureHandler(e);
+                                    }
+                                    this._successHandler = null;
+                                    this._failureHandler = null;
+                                }, 500); // 少し遅延させる
+                            } else {
+                                this._successHandler = null;
+                                this._failureHandler = null;
+                            }
+                            return this;
+                        },
+                        getAccessKeyInfo: function() {
+                             console.log(`[ダミー] getAccessKeyInfo を呼び出しました。`);
+                             // ローカルストレージからダミー情報を読み取る (オプション)
+                             const isSet = localStorage.getItem('dummy_access_key_set') === 'true';
+                             const lastFour = localStorage.getItem('dummy_access_key_last_four');
+                             let status = "未設定";
+                             if (isSet && lastFour) {
+                                 status = `設定済み (末尾4桁: ${lastFour})`;
+                             } else if (isSet) {
+                                 status = "設定済み";
+                             }
+
+                             if (this._successHandler) {
+                                 setTimeout(() => {
+                                     try {
+                                         this._successHandler(status); // 取得したステータスを返す
+                                     } catch (e) {
+                                         console.error("Success handler for getAccessKeyInfo failed:", e);
+                                         if (this._failureHandler) this._failureHandler(e);
+                                     }
+                                     this._successHandler = null;
+                                     this._failureHandler = null;
+                                 }, 100);
+                             } else {
+                                 this._successHandler = null;
+                                 this._failureHandler = null;
+                             }
+                             return this;
+                        },
+                         // --- 追加ここまで ---
+
+                        // DM同期のダミー実装
+                        syncDmsFromApi: function(customerId) {
+                             console.log(`[ダミー] syncDmsFromApi 呼び出し: customerId=${customerId}`);
+                             if (this._successHandler) {
+                                 setTimeout(() => {
+                                      try {
+                                         // ここで true / false を変えて同期成功/失敗をテストできる
+                                         this._successHandler(true); 
+                                      } catch (e) {
+                                          console.error("Success handler for syncDmsFromApi failed:", e);
+                                          if (this._failureHandler) this._failureHandler(e);
+                                      }
+                                      this._successHandler = null;
+                                      this._failureHandler = null;
+                                 }, 1500); // 同期は少し時間がかかるように見せる
+                             } else {
+                                 this._successHandler = null;
+                                 this._failureHandler = null;
+                             }
+                              return this;
+                        }
+                    }
+                }
+            };
+        }
+
+        // 現在選択されている顧客ID
+        let currentCustomerId = null;
+        
+        // ページ読み込み時の初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            // サーバーから顧客データを取得
+            google.script.run.withSuccessHandler(function(customers) {
+                // 顧客リストを生成
+                generateCustomerList(customers);
+                
+                // 顧客IDが存在する場合は初期表示
+                if (Object.keys(customers).length > 0) {
+                    currentCustomerId = Object.keys(customers)[0];
+                    updateCustomerView(currentCustomerId);
+                }
+            }).getCustomers();
+            
+            // レスポンシブサイドバーの制御
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const syncDmButton = document.getElementById('sync-dm-button');
+            const syncStatus = document.getElementById('sync-status');
+
+            if (sidebarToggle && sidebar && sidebarOverlay) {
+                // トグルボタンのクリックイベント
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                    sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
+                });
+
+                // ↓ Add click event for overlay to close sidebar
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('show');
+                    this.style.display = 'none';
+                });
+            }
+            
+            // メッセージ送信（Enterキーまたは送信ボタン）
+            const messageInput = document.querySelector('input[placeholder="メッセージを入力..."]');
+            const sendButton = document.querySelector('.btn-primary[type="button"]');
+            
+            if (messageInput) {
+                messageInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendMessageFromInput();
+                    }
+                });
+            }
+            
+            if (sendButton) {
+                sendButton.addEventListener('click', sendMessageFromInput);
+            }
+            
+            // 返信候補ボタンのクリックイベント
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('reply-btn')) {
+                    const replyText = e.target.textContent;
+                    const inputField = document.querySelector('input[placeholder="メッセージを入力..."]');
+                    if (inputField) {
+                        inputField.value = replyText;
+                        inputField.focus();
+                    }
+                }
+            });
+            
+            // 編集ボタンのクリックイベント
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('edit-message-btn') || 
+                    (e.target.parentElement && e.target.parentElement.classList.contains('edit-message-btn'))) {
+                    
+                    // 編集ボタン要素を取得
+                    const editBtn = e.target.classList.contains('edit-message-btn') ? 
+                                    e.target : e.target.parentElement;
+                    
+                    // メッセージ要素を取得
+                    const messageDiv = editBtn.parentNode;
+                    
+                    // 既に編集中の場合は何もしない
+                    if (messageDiv.classList.contains('editing')) {
+                        return;
+                    }
+                    
+                    // メッセージのテキストを取得（編集ボタンのテキストを除く）
+                    const messageText = messageDiv.textContent.trim();
+                    
+                    // 元のメッセージ内容を保存
+                    messageDiv.setAttribute('data-original-text', messageText);
+                    
+                    // 編集用の入力フィールドを作成
+                    const editInput = document.createElement('input');
+                    editInput.className = 'edit-message-input';
+                    editInput.value = messageText;
+                    
+                    // メッセージの内容をクリアして入力フィールドを追加
+                    messageDiv.innerHTML = '';
+                    messageDiv.appendChild(editInput);
+                    messageDiv.classList.add('editing');
+                    
+                    // 編集アクションボタンを作成
+                    const editActions = document.createElement('div');
+                    editActions.className = 'edit-actions';
+                    
+                    const saveButton = document.createElement('button');
+                    saveButton.className = 'save-edit-btn';
+                    saveButton.textContent = '保存';
+                    
+                    const cancelButton = document.createElement('button');
+                    cancelButton.className = 'cancel-edit-btn';
+                    cancelButton.textContent = 'キャンセル';
+                    
+                    editActions.appendChild(saveButton);
+                    editActions.appendChild(cancelButton);
+                    messageDiv.appendChild(editActions);
+                    
+                    // 入力フィールドにフォーカスを当てる
+                    editInput.focus();
+                    
+                    // 保存ボタンのクリックイベント
+                    saveButton.addEventListener('click', function() {
+                        const oldText = messageDiv.getAttribute('data-original-text');
+                        const newText = editInput.value.trim();
+                        
+                        // 変更がない場合はキャンセル処理と同じ
+                        if (newText === oldText) {
+                            restoreMessage(messageDiv, oldText);
+                            return;
+                        }
+                        
+                        // 空のメッセージは許可しない
+                        if (!newText) {
+                            alert('メッセージを入力してください');
+                            return;
+                        }
+                        
+                        // サーバーにメッセージ編集を送信
+                        google.script.run
+                            .withSuccessHandler(function(success) {
+                                if (success) {
+                                    // 成功した場合、メッセージを更新
+                                    restoreMessage(messageDiv, newText);
+                                    // 顧客ビューを更新
+                                    updateCustomerView(currentCustomerId);
+                                } else {
+                                    // 失敗した場合、元のメッセージに戻す
+                                    alert('メッセージの編集に失敗しました');
+                                    restoreMessage(messageDiv, oldText);
+                                }
+                            })
+                            .withFailureHandler(function(error) {
+                                alert('エラーが発生しました: ' + error);
+                                restoreMessage(messageDiv, oldText);
+                            })
+                            .editMessageInSheet(currentCustomerId, oldText, newText);
+                    });
+                    
+                    // キャンセルボタンのクリックイベント
+                    cancelButton.addEventListener('click', function() {
+                        const originalText = messageDiv.getAttribute('data-original-text');
+                        restoreMessage(messageDiv, originalText);
+                    });
+                    
+                    // Enterキーで保存、Escキーでキャンセル
+                    editInput.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            saveButton.click();
+                        } else if (e.key === 'Escape') {
+                            e.preventDefault();
+                            cancelButton.click();
+                        }
+                    });
+                }
+            });
+            
+            // メッセージを元の表示に戻す関数
+            function restoreMessage(messageDiv, text) {
+                messageDiv.textContent = text;
+                messageDiv.classList.remove('editing');
+                messageDiv.removeAttribute('data-original-text');
+                
+                // 編集ボタンを再追加
+                const editBtn = document.createElement('button');
+                editBtn.className = 'edit-message-btn';
+                editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+                messageDiv.appendChild(editBtn);
+                
+                // タイムスタンプがあれば再追加
+                const timestamp = messageDiv.getAttribute('data-timestamp');
+                if (timestamp) {
+                    const timeSpan = document.createElement('small');
+                    timeSpan.className = 'timestamp';
+                    timeSpan.textContent = timestamp;
+                    messageDiv.appendChild(document.createElement('br'));
+                    messageDiv.appendChild(timeSpan);
+                }
+            }
+            
+            // 顧客リストを生成する関数
+            function generateCustomerList(customers) {
+                const customerList = document.querySelector('.customer-list');
+                if (!customerList) return;
+                
+                customerList.innerHTML = '';
+                
+                // 顧客IDの重複を防ぐためのセット
+                const processedIds = new Set();
+                
+                // 顧客リストを生成
+                for (const id in customers) {
+                    // 既に処理済みのIDはスキップ
+                    if (processedIds.has(id)) continue;
+                    processedIds.add(id);
+                    
+                    const customer = customers[id];
+                    const customerItem = document.createElement('div');
+                    customerItem.className = 'customer-item';
+                    customerItem.setAttribute('data-customer', customer.id);
+                    
+                    // 顧客情報
+                    customerItem.innerHTML = `
+                        <div class="customer-avatar">
+                            <img src="${customer.avatar}" alt="${customer.name}">
+                        </div>
+                        <div class="customer-info">
+                            <div class="customer-name">${customer.name}</div>
+                            <div class="customer-username">${customer.username}</div>
+                        </div>
+                    `;
+                    
+                    customerList.appendChild(customerItem);
+                    
+                    // クリックイベント
+                    customerItem.addEventListener('click', function() {
+                        const customerId = this.getAttribute('data-customer');
+                        currentCustomerId = customerId;
+                        updateCustomerView(customerId);
+                        
+                        // モバイル表示時はサイドバーを閉じる
+                        const sidebar = document.getElementById('sidebar');
+                        if (window.innerWidth <= 991.98 && sidebar) {
+                            sidebar.classList.remove('show');
+                            sidebarOverlay.style.display = 'none';
+                        }
+                        
+                        // アクティブクラスを設定
+                        document.querySelectorAll('.customer-item').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    });
+                }
+            }
+            
+            // 顧客ビューを更新する関数
+            function updateCustomerView(customerId) {
+                if (!customerId) return;
+                
+                // サーバーから顧客データを取得
+                google.script.run.withSuccessHandler(function(customer) {
+                    if (!customer) return;
+                    
+                    // 顧客名を更新 (同期ボタンエリアに移動)
+                    const customerHeader = document.getElementById('customer-username-display');
+                    if (customerHeader) {
+                        customerHeader.textContent = customer.username || '顧客を選択';
+                    }
+
+                    // ↓ 同期ボタンを表示 (顧客が選択されたら)
+                    if (syncDmButton) {
+                         syncDmButton.style.display = customer ? 'inline-block' : 'none';
+                    }
+                    // ↓ 同期ステータスをクリア
+                    if(syncStatus) {
+                        syncStatus.textContent = '';
+                    }
+                    
+                    // メッセージコンテナをクリア
+                    const messageContainer = document.querySelector('.message-container');
+                    if (messageContainer) {
+                        messageContainer.innerHTML = '';
+                        
+                        // メッセージを表示
+                        if (customer.messages && customer.messages.length > 0) {
+                            customer.messages.forEach(message => {
+                                const messageDiv = document.createElement('div');
+                                messageDiv.className = `message message-${message.sender}`;
+                                messageDiv.textContent = message.text;
+                                messageDiv.innerHTML += `<button class="edit-message-btn"><i class="fas fa-pencil-alt"></i></button>`;
+                                
+                                if (message.timestamp) {
+                                    const timeSpan = document.createElement('small');
+                                    timeSpan.className = 'timestamp';
+                                    timeSpan.textContent = message.timestamp;
+                                    messageDiv.appendChild(document.createElement('br'));
+                                    messageDiv.appendChild(timeSpan);
+                                }
+                                
+                                messageContainer.appendChild(messageDiv);
+                            });
+                        } else {
+                            // メッセージがない場合
+                            const noMessageDiv = document.createElement('div');
+                            noMessageDiv.className = 'text-center text-muted my-5';
+                            noMessageDiv.textContent = 'メッセージはありません';
+                            messageContainer.appendChild(noMessageDiv);
+                        }
+                        
+                        // スクロールを一番下に
+                        messageContainer.scrollTop = messageContainer.scrollHeight;
+                    }
+                    
+                    // 返信候補を更新
+                    updateReplySuggestions(customerId);
+                }).getCustomer(customerId);
+            }
+            
+            // 返信候補を更新する関数
+            function updateReplySuggestions(customerId) {
+                // サーバーから返信候補を取得
+                google.script.run.withSuccessHandler(function(suggestions) {
+                    // 返信候補ボタンを更新
+                    const suggestionsContainer = document.querySelector('.reply-suggestions');
+                    if (suggestionsContainer) {
+                        suggestionsContainer.innerHTML = '<h6 class="mb-3">返信候補</h6>';
+                        
+                        if (suggestions && suggestions.length > 0) {
+                            const buttonsContainer = document.createElement('div');
+                            buttonsContainer.className = 'reply-buttons';
+                            
+                            suggestions.forEach(suggestion => {
+                                const button = document.createElement('button');
+                                button.className = 'btn btn-outline-primary reply-btn mb-2 me-2';
+                                button.textContent = suggestion;
+                                buttonsContainer.appendChild(button);
+                            });
+                            
+                            suggestionsContainer.appendChild(buttonsContainer);
+                        } else {
+                            const noSuggestions = document.createElement('p');
+                            noSuggestions.className = 'text-muted';
+                            noSuggestions.textContent = '返信候補はありません';
+                            suggestionsContainer.appendChild(noSuggestions);
+                        }
+                    }
+                }).getReplySuggestions(customerId);
+            }
+            
+            // メッセージを送信する関数（入力フィールドから）
+            function sendMessageFromInput() {
+                const messageInput = document.querySelector('input[placeholder="メッセージを入力..."]');
+                if (messageInput && messageInput.value.trim() !== '' && currentCustomerId) {
+                    sendMessage(messageInput.value.trim());
+                    messageInput.value = '';
+                }
+            }
+            
+            // メッセージを送信する関数
+            function sendMessage(text) {
+                if (!currentCustomerId) return;
+                
+                // 送信中の表示
+                const messageContainer = document.querySelector('.message-container');
+                if (messageContainer) {
+                    const sendingDiv = document.createElement('div');
+                    sendingDiv.className = 'message message-user sending';
+                    sendingDiv.textContent = text;
+                    sendingDiv.id = 'sending-message';
+                    messageContainer.appendChild(sendingDiv);
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                }
+                
+                // サーバーにメッセージを送信
+                google.script.run
+                    .withSuccessHandler(function(success) {
+                        // 送信中表示を削除
+                        const sendingMessage = document.getElementById('sending-message');
+                        if (sendingMessage) {
+                            sendingMessage.remove();
+                        }
+                        
+                        if (success) {
+                            // ビューを更新
+                            updateCustomerView(currentCustomerId);
+                        } else {
+                            // エラーメッセージ
+                            alert('メッセージの送信に失敗しました。');
+                        }
+                    })
+                    .withFailureHandler(function(error) {
+                        // 送信中表示を削除
+                        const sendingMessage = document.getElementById('sending-message');
+                        if (sendingMessage) {
+                            sendingMessage.remove();
+                        }
+                        
+                        // エラーメッセージ
+                        alert('エラーが発生しました: ' + error);
+                    })
+                    .sendMessageToCustomer(currentCustomerId, text);
+            }
+
+            // ↓ 追加: 同期ボタンのクリックイベント
+            if (syncDmButton) {
+                syncDmButton.addEventListener('click', function() {
+                    if (currentCustomerId) {
+                        triggerDmSync(currentCustomerId);
+                    }
+                });
+            }
+
+            // ↓ 追加: DM同期をトリガーする関数
+            function triggerDmSync(customerId) {
+                if (!customerId) return;
+
+                const button = document.getElementById('sync-dm-button');
+                const statusSpan = document.getElementById('sync-status');
+
+                if (button) button.disabled = true;
+                if (statusSpan) statusSpan.textContent = '同期中...';
+
+                google.script.run
+                    .withSuccessHandler(function(success) {
+                        if (button) button.disabled = false;
+                        if (success) {
+                            if (statusSpan) statusSpan.textContent = '同期完了';
+                            // 同期が完了したらメッセージビューを更新
+                            updateCustomerView(customerId);
+                            // 少し経ったらステータス表示を消す
+                             setTimeout(() => {
+                                 if (statusSpan) statusSpan.textContent = '';
+                             }, 3000);
+                        } else {
+                             if (statusSpan) statusSpan.textContent = '同期失敗';
+                             alert('DMの同期に失敗しました。詳細はサーバーログを確認してください。');
+                             // 少し経ったらステータス表示を消す
+                             setTimeout(() => {
+                                 if (statusSpan) statusSpan.textContent = '';
+                             }, 5000);
+                        }
+                    })
+                    .withFailureHandler(function(error) {
+                        if (button) button.disabled = false;
+                        if (statusSpan) statusSpan.textContent = '同期エラー';
+                        alert('DM同期中にエラーが発生しました: ' + error);
+                         // 少し経ったらステータス表示を消す
+                         setTimeout(() => {
+                             if (statusSpan) statusSpan.textContent = '';
+                         }, 5000);
+                    })
+                    .syncDmsFromApi(customerId);
+            }
+
+            // --- アカウント設定関連 --- 
+            const accessKeyInput = document.getElementById('accessKeyInput');
+            const saveKeyButton = document.getElementById('save-key-button');
+            const accessKeyStatus = document.getElementById('access-key-status');
+            const saveKeyMessage = document.getElementById('save-key-message');
+
+            // アクセスキー設定状況を取得して表示する関数
+            function loadAccessKeyInfo() {
+                if (accessKeyStatus) accessKeyStatus.textContent = '読み込み中...';
+                google.script.run
+                    .withSuccessHandler(function(status) {
+                        if (accessKeyStatus) accessKeyStatus.textContent = status || '取得エラー';
+                    })
+                    .withFailureHandler(function(error) {
+                        if (accessKeyStatus) accessKeyStatus.textContent = '取得エラー';
+                        console.error('アクセスキー情報の取得に失敗:', error);
+                    })
+                    .getAccessKeyInfo();
+            }
+
+            // 保存ボタンのクリックイベント
+            if (saveKeyButton && accessKeyInput) {
+                saveKeyButton.addEventListener('click', function() {
+                    const newKey = accessKeyInput.value;
+                    if (!newKey) {
+                        if (saveKeyMessage) {
+                            saveKeyMessage.textContent = 'アクセスキーを入力してください。';
+                            saveKeyMessage.className = 'mt-2 text-danger';
+                        }
+                        return;
+                    }
+
+                    saveKeyButton.disabled = true;
+                    if (saveKeyMessage) {
+                        saveKeyMessage.textContent = '保存中...';
+                        saveKeyMessage.className = 'mt-2 text-muted';
+                    }
+
+                    google.script.run
+                        .withSuccessHandler(function(success) {
+                            saveKeyButton.disabled = false;
+                            if (success) {
+                                if (saveKeyMessage) {
+                                    saveKeyMessage.textContent = 'アクセスキーを保存しました。';
+                                    saveKeyMessage.className = 'mt-2 text-success';
+                                }
+                                accessKeyInput.value = ''; // 入力欄をクリア
+                                loadAccessKeyInfo(); // 表示を更新
+                            } else {
+                                if (saveKeyMessage) {
+                                    saveKeyMessage.textContent = 'アクセスキーの保存に失敗しました。';
+                                    saveKeyMessage.className = 'mt-2 text-danger';
+                                }
+                            }
+                            // メッセージを数秒後に消す
+                            setTimeout(() => {
+                                if (saveKeyMessage) saveKeyMessage.textContent = '';
+                            }, 5000);
+                        })
+                        .withFailureHandler(function(error) {
+                            saveKeyButton.disabled = false;
+                            if (saveKeyMessage) {
+                                saveKeyMessage.textContent = '保存中にエラーが発生しました。';
+                                saveKeyMessage.className = 'mt-2 text-danger';
+                            }
+                            console.error('アクセスキーの保存に失敗:', error);
+                            // メッセージを数秒後に消す
+                            setTimeout(() => {
+                                if (saveKeyMessage) saveKeyMessage.textContent = '';
+                            }, 5000);
+                        })
+                        .saveAccessKey(newKey);
+                });
+            }
+
+            // 初期読み込み時にアクセスキー情報を取得
+            loadAccessKeyInfo();
+        });
+    </script>
+</body>
+</html>
