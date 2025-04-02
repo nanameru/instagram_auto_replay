@@ -417,6 +417,126 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- インスタグラムDMインポート機能 -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">DMインポート</h5>
+                                
+                                <!-- タブナビゲーション -->
+                                <ul class="nav nav-tabs mb-3" id="importTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="screenshot-tab" data-bs-toggle="tab" data-bs-target="#screenshot" type="button" role="tab" aria-controls="screenshot" aria-selected="true">
+                                            <i class="fas fa-image me-1"></i>スクリーンショット
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="html-tab" data-bs-toggle="tab" data-bs-target="#html" type="button" role="tab" aria-controls="html" aria-selected="false">
+                                            <i class="fas fa-code me-1"></i>HTML
+                                        </button>
+                                    </li>
+                                </ul>
+                                
+                                <!-- タブコンテンツ -->
+                                <div class="tab-content" id="importTabsContent">
+                                    <!-- スクリーンショットタブ -->
+                                    <div class="tab-pane fade show active" id="screenshot" role="tabpanel" aria-labelledby="screenshot-tab">
+                                        <p class="text-muted small mb-3">インスタグラムDMのスクリーンショットをアップロードしてデータベースに保存します</p>
+                                        
+                                        <div class="mb-3">
+                                            <div class="custom-file-upload border rounded p-3 text-center" id="dropZone">
+                                                <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-2"></i>
+                                                <p class="mb-1">ここにファイルをドロップまたは</p>
+                                                <input type="file" id="screenshotUpload" accept="image/*" class="d-none">
+                                                <label for="screenshotUpload" class="btn btn-sm btn-outline-primary">ファイルを選択</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div id="screenshot-preview" class="mb-3 d-none">
+                                            <img src="#" class="img-fluid border rounded" id="preview-image">
+                                            <div class="d-flex justify-content-end mt-2">
+                                                <button class="btn btn-sm btn-outline-danger me-2" id="remove-screenshot">
+                                                    <i class="fas fa-times"></i> 削除
+                                                </button>
+                                                <button class="btn btn-sm btn-primary" id="process-screenshot">
+                                                    <i class="fas fa-cogs"></i> 処理開始
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div id="screenshot-status" class="d-none alert alert-info">
+                                            <i class="fas fa-spinner fa-spin me-2"></i>
+                                            スクリーンショットを処理中...
+                                        </div>
+                                        
+                                        <div id="screenshot-result" class="d-none">
+                                            <div class="alert alert-success">
+                                                <i class="fas fa-check-circle me-2"></i>
+                                                <span id="screenshot-result-text"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- HTMLタブ -->
+                                    <div class="tab-pane fade" id="html" role="tabpanel" aria-labelledby="html-tab">
+                                        <p class="text-muted small mb-3">インスタグラムDMのHTMLをペーストまたはファイルとしてアップロード</p>
+                                        
+                                        <!-- マルチタブでファイルアップロードとテキスト入力を分割 -->
+                                        <ul class="nav nav-tabs nav-sm mb-3" id="htmlInputTabs" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" id="html-file-tab" data-bs-toggle="tab" data-bs-target="#html-file" type="button" role="tab" aria-controls="html-file" aria-selected="true">
+                                                    <i class="fas fa-file me-1"></i>ファイル
+                                                </button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="html-paste-tab" data-bs-toggle="tab" data-bs-target="#html-paste" type="button" role="tab" aria-controls="html-paste" aria-selected="false">
+                                                    <i class="fas fa-paste me-1"></i>テキスト貼り付け
+                                                </button>
+                                            </li>
+                                        </ul>
+                                        
+                                        <div class="tab-content" id="htmlInputTabsContent">
+                                            <!-- ファイルアップロードタブ -->
+                                            <div class="tab-pane fade show active" id="html-file" role="tabpanel" aria-labelledby="html-file-tab">
+                                                <div class="custom-file-upload border rounded p-3 text-center mb-3" id="htmlDropZone">
+                                                    <i class="fas fa-file-code fa-2x text-primary mb-2"></i>
+                                                    <p class="mb-1">HTMLファイルをドラッグ&ドロップまたは</p>
+                                                    <input type="file" id="htmlUpload" accept=".html,.htm" class="d-none">
+                                                    <label for="htmlUpload" class="btn btn-sm btn-outline-primary">ファイルを選択</label>
+                                                </div>
+                                                <div id="html-file-info" class="alert alert-info d-none">
+                                                    <i class="fas fa-info-circle me-2"></i>
+                                                    <span id="html-file-name"></span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- テキスト貼り付けタブ -->
+                                            <div class="tab-pane fade" id="html-paste" role="tabpanel" aria-labelledby="html-paste-tab">
+                                                <textarea class="form-control" id="htmlContent" rows="7" placeholder="HTMLをここにペースト..."></textarea>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-grid mt-3">
+                                            <button class="btn btn-primary" id="process-html">
+                                                <i class="fas fa-cogs"></i> 処理開始
+                                            </button>
+                                        </div>
+                                        
+                                        <div id="html-status" class="d-none alert alert-info mt-3">
+                                            <i class="fas fa-spinner fa-spin me-2"></i>
+                                            HTMLを処理中...
+                                        </div>
+                                        
+                                        <div id="html-result" class="d-none mt-3">
+                                            <div class="alert alert-success">
+                                                <i class="fas fa-check-circle me-2"></i>
+                                                <span id="html-result-text"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- DMやり取り履歴 -->
@@ -728,7 +848,7 @@
             const sidebarOverlay = document.getElementById('sidebarOverlay');
             const syncDmButton = document.getElementById('sync-dm-button');
             const syncStatus = document.getElementById('sync-status');
-
+            
             if (sidebarToggle && sidebar && sidebarOverlay) {
                 // トグルボタンのクリックイベント
                 sidebarToggle.addEventListener('click', function() {
@@ -1235,6 +1355,413 @@
 
             // 初期読み込み時にアクセスキー情報を取得
             loadAccessKeyInfo();
+
+            // --- DMインポート機能のJS ---
+            
+            // ファイルドロップゾーンの設定
+            const dropZone = document.getElementById('dropZone');
+            const screenshotUpload = document.getElementById('screenshotUpload');
+            const previewImage = document.getElementById('preview-image');
+            const screenshotPreview = document.getElementById('screenshot-preview');
+            const removeScreenshotBtn = document.getElementById('remove-screenshot');
+            const processScreenshotBtn = document.getElementById('process-screenshot');
+            const screenshotStatus = document.getElementById('screenshot-status');
+            const screenshotResult = document.getElementById('screenshot-result');
+            const screenshotResultText = document.getElementById('screenshot-result-text');
+            
+            let currentScreenshot = null;
+            
+            // ドラッグ&ドロップのイベント
+            if (dropZone) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, preventDefaults, false);
+                });
+                
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, highlight, false);
+                });
+                
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, unhighlight, false);
+                });
+                
+                function highlight() {
+                    dropZone.classList.add('border-primary');
+                }
+                
+                function unhighlight() {
+                    dropZone.classList.remove('border-primary');
+                }
+                
+                // ドロップ時の処理
+                dropZone.addEventListener('drop', handleDrop, false);
+                
+                function handleDrop(e) {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    handleFiles(files);
+                }
+            }
+            
+            // ファイル選択イベント
+            if (screenshotUpload) {
+                screenshotUpload.addEventListener('change', function() {
+                    handleFiles(this.files);
+                });
+            }
+            
+            // 画像ファイル処理
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.type.match('image.*')) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            currentScreenshot = e.target.result;
+                            displayScreenshot(currentScreenshot);
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    } else {
+                        alert('画像ファイルを選択してください');
+                    }
+                }
+            }
+            
+            // スクリーンショットを表示
+            function displayScreenshot(imageData) {
+                if (previewImage && screenshotPreview) {
+                    previewImage.src = imageData;
+                    screenshotPreview.classList.remove('d-none');
+                }
+            }
+            
+            // スクリーンショット削除ボタン
+            if (removeScreenshotBtn) {
+                removeScreenshotBtn.addEventListener('click', function() {
+                    currentScreenshot = null;
+                    if (screenshotPreview) {
+                        screenshotPreview.classList.add('d-none');
+                    }
+                    if (screenshotUpload) {
+                        screenshotUpload.value = '';
+                    }
+                });
+            }
+            
+            // スクリーンショット処理ボタン
+            if (processScreenshotBtn) {
+                processScreenshotBtn.addEventListener('click', function() {
+                    if (!currentScreenshot) return;
+                    
+                    // Base64形式の画像データからBase64部分のみを抽出
+                    const base64Data = currentScreenshot.split(',')[1];
+                    
+                    // 処理中表示
+                    if (screenshotStatus) screenshotStatus.classList.remove('d-none');
+                    if (screenshotResult) screenshotResult.classList.add('d-none');
+                    
+                    // ローカル環境シミュレーション
+                    if (typeof google !== 'undefined' && google.script && google.script.run) {
+                        // 実際のサーバー側処理
+                        google.script.run
+                            .withSuccessHandler(function(result) {
+                                // 処理中表示を非表示
+                                if (screenshotStatus) screenshotStatus.classList.add('d-none');
+                                
+                                // 結果表示
+                                if (screenshotResult && screenshotResultText) {
+                                    if (result.success) {
+                                        screenshotResult.classList.remove('d-none');
+                                        screenshotResult.querySelector('div').className = 'alert alert-success';
+                                        screenshotResultText.textContent = `成功: ${result.messageCount}件のメッセージを保存しました。`;
+                                        
+                                        // 顧客リストを更新
+                                        updateCustomerList();
+                                        
+                                        // 処理完了したらプレビューをクリア
+                                        setTimeout(() => {
+                                            if (removeScreenshotBtn) removeScreenshotBtn.click();
+                                        }, 1000);
+                                    } else {
+                                        screenshotResult.classList.remove('d-none');
+                                        screenshotResult.querySelector('div').className = 'alert alert-danger';
+                                        screenshotResultText.textContent = `エラー: ${result.error}`;
+                                    }
+                                }
+                            })
+                            .withFailureHandler(function(error) {
+                                // 処理中表示を非表示
+                                if (screenshotStatus) screenshotStatus.classList.add('d-none');
+                                
+                                // エラー表示
+                                if (screenshotResult && screenshotResultText) {
+                                    screenshotResult.classList.remove('d-none');
+                                    screenshotResult.querySelector('div').className = 'alert alert-danger';
+                                    screenshotResultText.textContent = `エラー: ${error}`;
+                                }
+                            })
+                            .processOCRImage(base64Data);
+                    } else {
+                        // ローカル環境でのモック
+                        console.log('ローカル環境: OCR処理をシミュレートします');
+                        setTimeout(() => {
+                            if (screenshotStatus) screenshotStatus.classList.add('d-none');
+                            
+                            if (screenshotResult && screenshotResultText) {
+                                screenshotResult.classList.remove('d-none');
+                                screenshotResult.querySelector('div').className = 'alert alert-success';
+                                screenshotResultText.textContent = `成功: 3件のメッセージを保存しました。(ローカル環境シミュレーション)`;
+                                
+                                setTimeout(() => {
+                                    if (removeScreenshotBtn) removeScreenshotBtn.click();
+                                }, 1000);
+                            }
+                        }, 2000);
+                    }
+                });
+            }
+            
+            // HTML処理関連
+            const htmlContent = document.getElementById('htmlContent');
+            const htmlUpload = document.getElementById('htmlUpload');
+            const htmlDropZone = document.getElementById('htmlDropZone');
+            const htmlFileInfo = document.getElementById('html-file-info');
+            const htmlFileName = document.getElementById('html-file-name');
+            const processHtmlBtn = document.getElementById('process-html');
+            const htmlStatus = document.getElementById('html-status');
+            const htmlResult = document.getElementById('html-result');
+            const htmlResultText = document.getElementById('html-result-text');
+            
+            let htmlFileContent = null;
+            
+            // HTMLドラッグ&ドロップのイベント設定
+            if (htmlDropZone) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    htmlDropZone.addEventListener(eventName, preventDefaults, false);
+                });
+                
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    htmlDropZone.addEventListener(eventName, function() {
+                        htmlDropZone.classList.add('border-primary');
+                    }, false);
+                });
+                
+                ['dragleave', 'drop'].forEach(eventName => {
+                    htmlDropZone.addEventListener(eventName, function() {
+                        htmlDropZone.classList.remove('border-primary');
+                    }, false);
+                });
+                
+                // ドロップ時の処理
+                htmlDropZone.addEventListener('drop', function(e) {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    handleHtmlFiles(files);
+                }, false);
+            }
+            
+            // HTMLファイルアップロード処理
+            if (htmlUpload) {
+                htmlUpload.addEventListener('change', function() {
+                    handleHtmlFiles(this.files);
+                });
+            }
+            
+            // HTMLファイル処理
+            function handleHtmlFiles(files) {
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            htmlFileContent = e.target.result;
+                            
+                            // ファイル情報を表示
+                            if (htmlFileInfo && htmlFileName) {
+                                htmlFileName.textContent = file.name;
+                                htmlFileInfo.classList.remove('d-none');
+                            }
+                            
+                            // テキストエリアにも内容を表示（テキスト入力との連携のため）
+                            if (htmlContent) {
+                                htmlContent.value = htmlFileContent;
+                            }
+                        };
+                        
+                        reader.readAsText(file);
+                    } else {
+                        alert('HTMLファイル(.html, .htm)を選択してください');
+                    }
+                }
+            }
+            
+            // HTML処理ボタン
+            if (processHtmlBtn) {
+                processHtmlBtn.addEventListener('click', function() {
+                    // ファイルアップロードとテキスト入力のどちらからでもコンテンツを取得
+                    let content = htmlContent.value.trim();
+                    
+                    // ファイルアップロードのコンテンツがある場合はそちらを優先
+                    if (htmlFileContent) {
+                        content = htmlFileContent;
+                    }
+                    
+                    if (!content) {
+                        alert('HTMLを入力またはファイルをアップロードしてください');
+                        return;
+                    }
+                    
+                    // 処理中表示
+                    if (htmlStatus) htmlStatus.classList.remove('d-none');
+                    if (htmlResult) htmlResult.classList.add('d-none');
+                    
+                    // サーバー側処理を呼び出し
+                    if (typeof google !== 'undefined' && google.script && google.script.run) {
+                        google.script.run
+                            .withSuccessHandler(function(result) {
+                                // 処理中表示を非表示
+                                if (htmlStatus) htmlStatus.classList.add('d-none');
+                                
+                                // 結果表示
+                                if (htmlResult && htmlResultText) {
+                                    if (result.success) {
+                                        htmlResult.classList.remove('d-none');
+                                        htmlResult.querySelector('div').className = 'alert alert-success';
+                                        htmlResultText.textContent = `成功: ${result.messageCount}件のメッセージを保存しました。`;
+                                        
+                                        // 顧客リストを更新
+                                        updateCustomerList();
+                                        
+                                        // 処理完了したらフィールドをクリア
+                                        setTimeout(() => {
+                                            resetHtmlFields();
+                                        }, 1000);
+                                    } else {
+                                        htmlResult.classList.remove('d-none');
+                                        htmlResult.querySelector('div').className = 'alert alert-danger';
+                                        htmlResultText.textContent = `エラー: ${result.error}`;
+                                    }
+                                }
+                            })
+                            .withFailureHandler(function(error) {
+                                // 処理中表示を非表示
+                                if (htmlStatus) htmlStatus.classList.add('d-none');
+                                
+                                // エラー表示
+                                if (htmlResult && htmlResultText) {
+                                    htmlResult.classList.remove('d-none');
+                                    htmlResult.querySelector('div').className = 'alert alert-danger';
+                                    htmlResultText.textContent = `エラー: ${error}`;
+                                }
+                            })
+                            .processHTMLContent(content);
+                    } else {
+                        // ローカル環境でのモック
+                        console.log('ローカル環境: HTML処理をシミュレートします');
+                        setTimeout(() => {
+                            if (htmlStatus) htmlStatus.classList.add('d-none');
+                            
+                            if (htmlResult && htmlResultText) {
+                                htmlResult.classList.remove('d-none');
+                                htmlResult.querySelector('div').className = 'alert alert-success';
+                                htmlResultText.textContent = `成功: 5件のメッセージを保存しました。(ローカル環境シミュレーション)`;
+                                
+                                // 顧客リストは更新しない（ローカル環境ではダミーデータを使用）
+                                
+                                setTimeout(() => {
+                                    resetHtmlFields();
+                                }, 1000);
+                            }
+                        }, 2000);
+                    }
+                });
+            }
+            
+            // HTMLフィールドをリセットする関数
+            function resetHtmlFields() {
+                if (htmlContent) htmlContent.value = '';
+                if (htmlUpload) htmlUpload.value = '';
+                htmlFileContent = null;
+                if (htmlFileInfo) htmlFileInfo.classList.add('d-none');
+            }
+            
+            // 顧客リストを更新する関数
+            function updateCustomerList() {
+                google.script.run.withSuccessHandler(function(customers) {
+                    // 顧客リストを再生成
+                    generateCustomerList(customers);
+                    
+                    // 顧客IDが存在し、現在選択されていなければ初期表示
+                    if (Object.keys(customers).length > 0 && !currentCustomerId) {
+                        currentCustomerId = Object.keys(customers)[0];
+                        updateCustomerView(currentCustomerId);
+                    } else if (currentCustomerId) {
+                        // 現在選択されている顧客があれば、その顧客ビューを更新
+                        updateCustomerView(currentCustomerId);
+                    }
+                }).getCustomers();
+            }
+            
+            // ダミーメソッドを拡張（ローカル環境テスト用）
+            if (typeof google !== 'undefined' && google.script && google.script.run) {
+                // ダミーのOCR処理
+                google.script.run.processOCRImage = function(base64Data) {
+                    console.log('[ダミー] processOCRImage 呼び出し');
+                    if (this._successHandler) {
+                        setTimeout(() => {
+                            try {
+                                this._successHandler({
+                                    success: true,
+                                    customerId: "instagram_" + new Date().getTime(),
+                                    messageCount: 3
+                                });
+                            } catch (e) {
+                                console.error("Success handler for processOCRImage failed:", e);
+                                if (this._failureHandler) this._failureHandler(e);
+                            }
+                            this._successHandler = null;
+                            this._failureHandler = null;
+                        }, 2000);
+                    } else {
+                        this._successHandler = null;
+                        this._failureHandler = null;
+                    }
+                    return this;
+                };
+                
+                // ダミーのHTML処理
+                google.script.run.processHTMLContent = function(htmlContent) {
+                    console.log('[ダミー] processHTMLContent 呼び出し');
+                    if (this._successHandler) {
+                        setTimeout(() => {
+                            try {
+                                this._successHandler({
+                                    success: true,
+                                    customerId: "instagram_" + new Date().getTime(),
+                                    messageCount: 5
+                                });
+                            } catch (e) {
+                                console.error("Success handler for processHTMLContent failed:", e);
+                                if (this._failureHandler) this._failureHandler(e);
+                            }
+                            this._successHandler = null;
+                            this._failureHandler = null;
+                        }, 2000);
+                    } else {
+                        this._successHandler = null;
+                        this._failureHandler = null;
+                    }
+                    return this;
+                };
+            }
         });
     </script>
 </body>
