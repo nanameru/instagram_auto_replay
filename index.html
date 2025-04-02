@@ -11,11 +11,28 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
+            color: #343a40;
         }
         
         /* ヘッダー */
         .navbar {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+        }
+        
+        /* カラー変数 */
+        :root {
+            --primary-color: #3b5998; /* Instagram風の青 */
+            --secondary-color: #833AB4; /* Instagram風の紫 */
+            --accent-color: #E1306C; /* Instagram風のピンク */
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-color: #dee2e6;
+            --hover-color: #e9ecef;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
         }
         
         /* サイドバー */
@@ -23,26 +40,28 @@
             height: 100vh;
             overflow-y: auto;
             background-color: #fff;
-            border-right: 1px solid #dee2e6;
-            padding: 1rem;
+            border-right: 1px solid var(--border-color);
+            padding: 1.25rem;
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.03);
         }
         
         /* サイドバー内の要素のスタイルを追加 */
         .user-icon {
             text-align: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             padding-top: 1rem;
         }
         
         .sidebar-item {
             padding: 0.75rem 1rem;
-            color: #333;
+            color: var(--dark-color);
             cursor: pointer;
             display: flex;
             align-items: center;
-            border-radius: 0.25rem;
+            border-radius: 8px;
             margin-bottom: 0.5rem;
-            transition: background-color 0.2s, color 0.2s;
+            transition: all 0.2s ease;
+            font-weight: 500;
         }
         
         .sidebar-item i {
@@ -52,18 +71,19 @@
         }
         
         .sidebar-item:hover {
-            background-color: #e9ecef;
+            background-color: var(--hover-color);
+            transform: translateX(3px);
         }
         
         .sidebar-item.active {
-            background-color: #0d6efd;
+            background-color: var(--primary-color);
             color: white;
         }
         
         .account-switcher {
-            border-top: 1px solid #dee2e6;
-            padding-top: 1rem;
-            margin-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.25rem;
+            margin-top: 2rem;
         }
         
         .account-option {
@@ -71,23 +91,26 @@
             align-items: center;
             padding: 0.5rem 1rem;
             cursor: pointer;
-            border-radius: 0.25rem;
+            border-radius: 8px;
             margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
         }
         
         .account-option:hover {
-            background-color: #e9ecef;
+            background-color: var(--hover-color);
         }
         
         .account-circle {
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 0.75rem;
-            background-color: #f1f1f1;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
         }
         
         .account-circle i {
@@ -95,23 +118,39 @@
         }
         
         /* 顧客リスト */
+        .customer-list-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
         .customer-list {
-            max-height: calc(100vh - 200px);
+            max-height: calc(100vh - 220px);
             overflow-y: auto;
         }
         
         .customer-item {
-            padding: 10px;
-            border-radius: 5px;
+            padding: 12px;
+            border-radius: 8px;
             margin-bottom: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
         }
         
-        .customer-item:hover, .customer-item.active {
-            background-color: #f1f1f1;
+        .customer-item:hover {
+            background-color: var(--hover-color);
+            border-color: var(--border-color);
+            transform: translateY(-2px);
+        }
+        
+        .customer-item.active {
+            background-color: rgba(59, 89, 152, 0.08); /* primary color with opacity */
+            border-left: 3px solid var(--primary-color);
+            padding-left: 9px; /* Compensate for border */
         }
         
         .customer-avatar {
@@ -121,8 +160,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 10px;
+            margin-right: 12px;
             overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         
         .customer-avatar img {
@@ -136,7 +176,8 @@
         }
         
         .customer-name {
-            font-weight: bold;
+            font-weight: 600;
+            color: var(--dark-color);
         }
         
         .customer-username {
@@ -148,31 +189,37 @@
         .message-container {
             height: 400px;
             overflow-y: auto;
-            padding: 10px;
+            padding: 15px;
             background-color: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 10px;
             margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
         }
         
         .message {
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            padding: 12px 15px;
+            border-radius: 18px;
+            margin-bottom: 15px;
             max-width: 80%;
             word-break: break-word;
             position: relative;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            line-height: 1.5;
         }
         
         .message-customer {
             background-color: #e9ecef;
             align-self: flex-start;
+            border-bottom-left-radius: 5px;
         }
         
         .message-user {
-            background-color: #007bff;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             align-self: flex-end;
             margin-left: auto;
+            border-bottom-right-radius: 5px;
         }
         
         .message.sending {
@@ -189,14 +236,15 @@
         /* 編集ボタン */
         .edit-message-btn {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 8px;
+            right: 8px;
             background: transparent;
             border: none;
             color: #6c757d;
             cursor: pointer;
             opacity: 0;
             transition: opacity 0.2s;
+            font-size: 0.8rem;
         }
         
         .message:hover .edit-message-btn {
@@ -204,7 +252,7 @@
         }
         
         .message-user .edit-message-btn {
-            color: white;
+            color: rgba(255, 255, 255, 0.8);
         }
         
         /* 編集モード */
@@ -215,125 +263,343 @@
         .edit-message-input {
             width: 100%;
             border: 1px solid #ced4da;
-            border-radius: 5px;
-            padding: 5px;
-            margin-top: 5px;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+        
+        .edit-message-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.25);
         }
         
         .edit-actions {
             position: absolute;
-            bottom: 5px;
-            right: 5px;
+            bottom: 8px;
+            right: 8px;
             display: flex;
         }
         
         .edit-actions button {
             margin-left: 5px;
             border: none;
-            border-radius: 3px;
-            padding: 2px 5px;
+            border-radius: 4px;
+            padding: 3px 8px;
             font-size: 0.8rem;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .edit-actions button:hover {
+            transform: translateY(-2px);
         }
         
         .save-edit-btn {
-            background-color: #28a745;
+            background-color: var(--success-color);
             color: white;
         }
         
         .cancel-edit-btn {
-            background-color: #dc3545;
+            background-color: var(--danger-color);
             color: white;
         }
         
         /* 返信候補 */
         .reply-suggestions {
-            margin-bottom: 20px;
-        }
-        
-        .reply-buttons {
             display: flex;
             flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
         }
         
-        .reply-btn {
-            margin-right: 5px;
-            margin-bottom: 5px;
-            white-space: normal;
+        .reply-suggestion {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
             text-align: left;
         }
         
-        /* レスポンシブ対応 */
-        @media (max-width: 991.98px) {
+        .reply-suggestion:hover {
+            background-color: var(--hover-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        /* メッセージ入力 */
+        .message-input-container {
+            position: relative;
+        }
+        
+        .message-input {
+            border-radius: 25px;
+            padding-right: 50px;
+            resize: none;
+            overflow-y: auto;
+            max-height: 100px;
+            transition: all 0.2s;
+            border: 1px solid var(--border-color);
+        }
+        
+        .message-input:focus {
+            box-shadow: 0 0 0 0.25rem rgba(59, 89, 152, 0.25);
+            border-color: var(--primary-color);
+        }
+        
+        .send-btn {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .send-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* ページカード */
+        .card {
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            padding: 0.8rem 1.25rem;
+        }
+        
+        .card-body {
+            padding: 1.25rem;
+        }
+        
+        /* フォーム要素 */
+        .form-control {
+            border-radius: 8px;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(59, 89, 152, 0.25);
+            border-color: var(--primary-color);
+        }
+        
+        .btn {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: #344e86; /* slightly darker */
+            border-color: #344e86;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* DMインポート関連 */
+        .custom-file-upload {
+            background-color: #fff;
+            transition: all 0.3s ease;
+            padding: 20px !important;
+            border-style: dashed !important;
+        }
+        
+        .custom-file-upload:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        #htmlDropZone, #dropZone {
+            border-style: dashed !important;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        #htmlDropZone:hover, #dropZone:hover,
+        #htmlDropZone.border-primary, #dropZone.border-primary {
+            background-color: rgba(59, 89, 152, 0.05);
+            border-color: var(--primary-color) !important;
+        }
+        
+        .nav-tabs .nav-item .nav-link {
+            color: var(--dark-color);
+            font-weight: 500;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            transition: all 0.2s;
+        }
+        
+        .nav-tabs .nav-item .nav-link.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            background-color: transparent;
+        }
+        
+        .nav-tabs .nav-item .nav-link:hover:not(.active) {
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .nav-sm .nav-link {
+            padding: 0.4rem 0.8rem !important;
+            font-size: 0.9rem;
+        }
+        
+        /* アラート */
+        .alert {
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* アカウント設定 */
+        .access-key-container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .access-key-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .status-set {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-not-set {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
             #sidebar {
                 position: fixed;
+                left: -280px;
                 top: 0;
-                height: 100vh;
-                left: -100%;
-                width: 80%;
-                max-width: 300px;
-                z-index: 1000;
-                transition: left 0.3s ease-in-out;
-                background-color: white;
-                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-                border-right: none;
-                padding-top: 3.5rem;
+                width: 280px;
+                height: 100%;
+                z-index: 1050;
+                transition: all 0.3s ease;
             }
             
-            #sidebar.show {
+            #sidebar.active {
                 left: 0;
+            }
+            
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+            }
+            
+            .overlay.active {
+                display: block;
+            }
+            
+            .sidebar-toggle {
+                display: block !important;
             }
             
             .main-content {
                 margin-left: 0 !important;
-                width: 100%;
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-            
-            .mobile-menu-toggle {
-                display: block;
-            }
-            
-            #sidebar.show ~ .sidebar-overlay {
-                display: block;
-            }
-            
-            .customer-list-container,
-            .col-md-7 {
-                width: 100%;
-                flex: 0 0 100%;
-                max-width: 100%;
-            }
-            .customer-list-container {
-                margin-bottom: 1rem;
             }
         }
         
-        /* ↓ Added styles for mobile toggle button */
-        .mobile-menu-toggle {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 1031;
-            background: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px 10px;
-            display: none;
+        /* ローディングスピナー */
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            border-width: 0.2em;
+        }
+        
+        /* ユーティリティクラス */
+        .cursor-pointer {
             cursor: pointer;
         }
         
-        /* ↓ Added styles for sidebar overlay */
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: none;
+        .transition-all {
+            transition: all 0.2s ease;
         }
     </style>
 </head>
@@ -405,15 +671,18 @@
                     <div class="col-md-5 customer-list-container">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <h5 class="card-title mb-4">顧客アカウント一覧</h5>
+                                <h5 class="card-title mb-4">
+                                    <i class="fas fa-users me-2 text-primary"></i>顧客アカウント一覧
+                                </h5>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="顧客検索..." aria-label="顧客検索">
-                                    <button class="btn btn-outline-secondary" type="button">
+                                    <input type="text" class="form-control" placeholder="顧客検索..." aria-label="顧客検索" id="customer-search">
+                                    <button class="btn btn-outline-secondary" type="button" id="search-button">
                                         <i class="fas fa-search"></i>
                                     </button>
                                 </div>
                                 
-                                <div class="customer-list">
+                                <div class="customer-list" id="customer-list">
+                                    <!-- 顧客リストは動的に生成されます -->
                                 </div>
                             </div>
                         </div>
@@ -421,7 +690,9 @@
                         <!-- インスタグラムDMインポート機能 -->
                         <div class="card mb-4">
                             <div class="card-body">
-                                <h5 class="card-title mb-3">DMインポート</h5>
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-file-import me-2 text-primary"></i>DMインポート
+                                </h5>
                                 
                                 <!-- タブナビゲーション -->
                                 <ul class="nav nav-tabs mb-3" id="importTabs" role="tablist">
@@ -441,7 +712,10 @@
                                 <div class="tab-content" id="importTabsContent">
                                     <!-- スクリーンショットタブ -->
                                     <div class="tab-pane fade show active" id="screenshot" role="tabpanel" aria-labelledby="screenshot-tab">
-                                        <p class="text-muted small mb-3">インスタグラムDMのスクリーンショットをアップロードしてデータベースに保存します</p>
+                                        <p class="text-muted small mb-3">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            インスタグラムDMのスクリーンショットをアップロードしてデータベースに保存します
+                                        </p>
                                         
                                         <div class="mb-3">
                                             <div class="custom-file-upload border rounded p-3 text-center" id="dropZone">
@@ -479,7 +753,10 @@
                                     
                                     <!-- HTMLタブ -->
                                     <div class="tab-pane fade" id="html" role="tabpanel" aria-labelledby="html-tab">
-                                        <p class="text-muted small mb-3">インスタグラムDMのHTMLをペーストまたはファイルとしてアップロード</p>
+                                        <p class="text-muted small mb-3">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            インスタグラムDMのHTMLをペーストまたはファイルとしてアップロード
+                                        </p>
                                         
                                         <!-- マルチタブでファイルアップロードとテキスト入力を分割 -->
                                         <ul class="nav nav-tabs nav-sm mb-3" id="htmlInputTabs" role="tablist">
@@ -541,60 +818,90 @@
                     
                     <!-- DMやり取り履歴 -->
                     <div class="col-md-7">
-                        <div class="card">
+                        <div class="card mb-4">
                             <div class="card-body">
-                                <h5 class="card-title mb-3">DMやり取り履歴</h5>
-                                <h6 class="text-danger mb-4"></h6>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h6 id="customer-username-display" class="text-danger mb-0"></h6>
-                                    <div>
-                                        <button id="sync-dm-button" class="btn btn-sm btn-outline-secondary" style="display: none;">
-                                            <i class="fas fa-sync-alt me-1"></i>DM同期
-                                        </button>
-                                        <span id="sync-status" class="ms-2 text-muted small"></span>
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-comments me-2 text-primary"></i>DM履歴
+                                    </h5>
+                                    <div class="customer-info d-flex align-items-center" id="selected-customer-info">
+                                        <div class="customer-avatar me-2">
+                                            <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="顧客アバター" id="selected-customer-avatar">
+                                        </div>
+                                        <div>
+                                            <div class="customer-name" id="selected-customer-name">顧客名</div>
+                                            <div class="customer-username" id="selected-customer-username">@username</div>
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="message-container d-flex flex-column">
+                                <!-- DM同期ボタン -->
+                                <div class="mb-3" id="dm-sync-container">
+                                    <button id="sync-dm-button" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-sync-alt me-1"></i>DM同期
+                                    </button>
+                                    <span id="sync-status" class="ms-2"></span>
+                                </div>
+                                
+                                <!-- メッセージ表示領域 -->
+                                <div class="message-container d-flex flex-column" id="message-container">
+                                    <!-- メッセージは動的に生成されます -->
                                 </div>
                                 
                                 <!-- 返信候補 -->
-                                <div class="reply-suggestions">
+                                <div class="reply-suggestions" id="reply-suggestions-container">
+                                    <div class="reply-suggestion-label mb-2 text-muted">
+                                        <small><i class="fas fa-lightbulb me-1"></i>返信候補:</small>
+                                    </div>
+                                    <div class="reply-suggestions" id="reply-suggestions">
+                                        <!-- 返信候補は動的に生成されます -->
+                                    </div>
                                 </div>
                                 
-                                <div class="mt-3 input-group">
-                                    <input type="text" class="form-control" placeholder="メッセージを入力..." aria-label="メッセージを入力">
-                                    <button class="btn btn-primary" type="button">
+                                <!-- メッセージ入力 -->
+                                <div class="input-group message-input-container">
+                                    <textarea class="form-control message-input" id="message-input" placeholder="メッセージを入力..." rows="2"></textarea>
+                                    <button class="btn send-btn" id="send-message-btn" disabled>
                                         <i class="fas fa-paper-plane"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- ↓ アカウント設定セクションを追加 -->
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title mb-3">アカウント設定</h5>
-                                <div class="mb-3">
-                                    <label for="accessKeyInput" class="form-label">Instagram アクセスキー</label>
-                                    <div class="input-group">
-                                        <input type="password" class="form-control" id="accessKeyInput" placeholder="アクセスキーを入力...">
-                                        <button class="btn btn-primary" type="button" id="save-key-button">保存</button>
+                        
+                        <!-- アカウント設定 -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-3">
+                                            <i class="fas fa-cog me-2 text-primary"></i>アカウント設定
+                                        </h5>
+                                        
+                                        <div class="access-key-container mb-3">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <h6 class="mb-0">Instagramアクセスキー</h6>
+                                                <span id="access-key-status" class="access-key-status ms-2">
+                                                    <i class="fas fa-circle-notch fa-spin"></i> 確認中...
+                                                </span>
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" id="access-key-input" placeholder="アクセスキーを入力...">
+                                                <button class="btn btn-primary" id="save-access-key">
+                                                    <i class="fas fa-save me-1"></i>保存
+                                                </button>
+                                            </div>
+                                            <small class="text-muted mt-2 d-block">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                APIからDMを取得するために必要です
+                                            </small>
+                                            <div id="save-key-message" class="mt-2 small"></div>
+                                        </div>
                                     </div>
-                                    <div class="form-text">現在の設定: <span id="access-key-status" class="fw-bold">読み込み中...</span></div>
-                                    <div id="save-key-message" class="mt-2"></div>
                                 </div>
-                                <!-- 他の設定項目があればここに追加 -->
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- ↑ アカウント設定セクションここまで -->
-
             </div>
         </div>
     </div>
@@ -1279,23 +1586,45 @@
             }
 
             // --- アカウント設定関連 --- 
-            const accessKeyInput = document.getElementById('accessKeyInput');
-            const saveKeyButton = document.getElementById('save-key-button');
+            const accessKeyInput = document.getElementById('access-key-input');
+            const saveKeyButton = document.getElementById('save-access-key');
             const accessKeyStatus = document.getElementById('access-key-status');
             const saveKeyMessage = document.getElementById('save-key-message');
 
             // アクセスキー設定状況を取得して表示する関数
             function loadAccessKeyInfo() {
-                if (accessKeyStatus) accessKeyStatus.textContent = '読み込み中...';
-                google.script.run
-                    .withSuccessHandler(function(status) {
-                        if (accessKeyStatus) accessKeyStatus.textContent = status || '取得エラー';
-                    })
-                    .withFailureHandler(function(error) {
-                        if (accessKeyStatus) accessKeyStatus.textContent = '取得エラー';
-                        console.error('アクセスキー情報の取得に失敗:', error);
-                    })
-                    .getAccessKeyInfo();
+                if (typeof google !== 'undefined' && google.script && google.script.run) {
+                    google.script.run
+                        .withSuccessHandler(function(result) {
+                            if (accessKeyStatus) {
+                                if (result.isSet) {
+                                    accessKeyStatus.textContent = '設定済み';
+                                    accessKeyStatus.className = 'access-key-status status-set';
+                                    accessKeyStatus.innerHTML = '<i class="fas fa-check-circle me-1"></i>設定済み';
+                                } else {
+                                    accessKeyStatus.textContent = '未設定';
+                                    accessKeyStatus.className = 'access-key-status status-not-set';
+                                    accessKeyStatus.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i>未設定';
+                                }
+                            }
+                        })
+                        .withFailureHandler(function(error) {
+                            if (accessKeyStatus) {
+                                accessKeyStatus.textContent = 'エラー';
+                                accessKeyStatus.className = 'access-key-status status-not-set';
+                                accessKeyStatus.innerHTML = '<i class="fas fa-exclamation-triangle me-1"></i>エラー';
+                            }
+                            console.error('アクセスキー情報の取得に失敗:', error);
+                        })
+                        .getAccessKeyInfo();
+                } else {
+                    // ローカル環境のシミュレーション
+                    if (accessKeyStatus) {
+                        accessKeyStatus.textContent = '未設定 (ローカル)';
+                        accessKeyStatus.className = 'access-key-status status-not-set';
+                        accessKeyStatus.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i>未設定 (ローカル)';
+                    }
+                }
             }
 
             // 保存ボタンのクリックイベント
@@ -1763,6 +2092,44 @@
                 };
             }
         });
+
+        // 返信候補を表示
+        function displayReplySuggestions(suggestions) {
+            const suggestionsContainer = document.getElementById('reply-suggestions');
+            
+            if (!suggestionsContainer) return;
+            
+            // 一旦クリア
+            suggestionsContainer.innerHTML = '';
+            
+            // 返信候補がない場合はコンテナを非表示に
+            const suggestionsParent = document.getElementById('reply-suggestions-container');
+            if (!suggestions || !suggestions.length) {
+                if (suggestionsParent) suggestionsParent.style.display = 'none';
+                return;
+            }
+            
+            // 返信候補を表示
+            if (suggestionsParent) suggestionsParent.style.display = 'block';
+            
+            // 返信候補ボタンを追加
+            suggestions.forEach(suggestion => {
+                const btn = document.createElement('button');
+                btn.className = 'reply-suggestion';
+                btn.textContent = suggestion;
+                btn.addEventListener('click', () => {
+                    const messageInput = document.getElementById('message-input');
+                    if (messageInput) {
+                        messageInput.value = suggestion;
+                        messageInput.focus();
+                        // 送信ボタンを有効化
+                        const sendButton = document.getElementById('send-message-btn');
+                        if (sendButton) sendButton.disabled = false;
+                    }
+                });
+                suggestionsContainer.appendChild(btn);
+            });
+        }
     </script>
 </body>
 </html>
